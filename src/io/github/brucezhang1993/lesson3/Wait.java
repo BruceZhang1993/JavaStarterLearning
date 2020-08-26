@@ -1,24 +1,34 @@
 package io.github.brucezhang1993.lesson3;
 
+import java.util.concurrent.TimeUnit;
+
 public class Wait {
-    private static void wait(int seconds) throws InterruptedException {
-        long start = System.currentTimeMillis();
+    private static final long BASE = 2000000L;
+
+    private static void waitSeconds(int seconds) throws InterruptedException {
+        final long end = System.nanoTime() + seconds * 1000000000L;
+        long timeLeft = seconds * 1000000000L;
         while (true) {
-            if (System.currentTimeMillis() - start >= seconds * 1000) {
-                break;
+            if (timeLeft > BASE) {
+                Thread.sleep(1L);
+            } else {
+                if (timeLeft <= 0) {
+                    break;
+                }
+                Thread.sleep(0L);
             }
-            Thread.sleep(1);
+            timeLeft = end - System.nanoTime();
         }
     }
 
     public static void main(String[] args) {
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
         try {
-            wait(30);
+            waitSeconds(30);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        long end = System.currentTimeMillis();
-        System.out.printf("开始: %d 结束：%d 时间：%dms", start, end, end - start);
+        long end = System.nanoTime();
+        System.out.printf("执行时间：%d nanoseconds", end - start);
     }
 }

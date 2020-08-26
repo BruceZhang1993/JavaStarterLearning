@@ -4,26 +4,40 @@ import java.util.Random;
 
 public class MyRandom {
     private static int target;
+    private static int counter = 0;
+    private static Random random = new Random();
 
-    private static void guess() {
-        int counter = 1;
-        int current = 0;
-        int left = 0;
-        int right = 1000;
-        while ((current = (int) ((left + right) / 2)) != target) {
-            if (current > target) {
-                right = current;
-            } else {
-                left = current;
-            }
-            counter++;
+    private static int guess(int left, int right) {
+        int current = (int) ((left + right) / 2);
+        counter++;
+        if (current == target) {
+            return current;
         }
-        System.out.printf("随机数字是 %d 一共猜了 %d 次", current, counter);
+        if (right - left < 2) {
+            return -1;
+        }
+        boolean chooseRight = random.nextBoolean();
+        int a = -1;
+        if (chooseRight) {
+            a = guess(current + 1, right);
+        } else {
+            a = guess(left, current);
+        }
+        if (a == -1) {
+            if (chooseRight) {
+                return guess(left, current);
+            } else {
+                return guess(current + 1, right);
+            }
+        } else {
+            return a;
+        }
     }
 
     public static void main(String[] args) {
-        Random random = new Random();
         target = random.nextInt(1000);
-        MyRandom.guess();
+        System.out.println(target);
+        System.out.println(MyRandom.guess(0, 1000));
+        System.out.println(counter);
     }
 }

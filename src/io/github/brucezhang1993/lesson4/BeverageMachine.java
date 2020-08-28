@@ -3,7 +3,7 @@ package io.github.brucezhang1993.lesson4;
 import java.util.*;
 
 abstract class Beverage {
-    String type;
+    public abstract String toString();
 }
 
 class Coffee extends Beverage {
